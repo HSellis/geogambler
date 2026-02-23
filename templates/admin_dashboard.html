@@ -9,11 +9,35 @@
         const container = document.getElementById('choices-container');
         const div = document.createElement('div');
         div.className = 'choice-row';
-        div.innerHTML = `<input type="text" name="choices[]" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button>`;
+        div.innerHTML = `<input type="text" name="choices" placeholder="Variant"> <button class="choice-button" onclick="removeChoiceField(this)">-</button>`;
         container.appendChild(div);
     }
     function removeChoiceField(btn) {
         btn.parentElement.remove();
+    }
+    function submitEndRoundForm() {
+        const form = document.getElementById('end-round-form');
+        const formData = new FormData(form);
+        fetch('/admin/end-round', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.body.innerHTML = html;
+        });
+    }
+    function submitStartRoundForm() {
+        const form = document.getElementById('start-round-form');
+        const formData = new FormData(form);
+        fetch('/admin/start-round', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.body.innerHTML = html;
+        });
     }
     </script>
 </head>
@@ -21,7 +45,7 @@
     <div class="main-content">
         {% if round_info %}
             <h2>Lõpeta ennustusvoor</h2>
-            <form method="post" action="/admin/end-round">
+            <form id="end-round-form">
                 <p>Küsimus: {{ round_info.question }}</p>
                 <label>Õiged vastused:</label><br>
                 {% if round_info.choices and round_info.choices|length > 0 %}
@@ -31,21 +55,23 @@
                 {% else %}
                     <p>Valikvastuseid pole.</p>
                 {% endif %}
-                <button type="submit">Lõpeta voor</button>
+                <button type="button" id="end-round-button" onclick="submitEndRoundForm()">Lõpeta voor</button>
             </form>
+            <div id="end-round-message"></div>
         {% else %}
             <h2>Alusta uut ennustusvooru</h2>
-            <form method="post" action="/admin/start-round">
+            <form id="start-round-form">
                 <label>Küsimus:</label><br>
                 <input type="text" name="question"><br>
                 <label>Vastusevariandid:</label><br>
                 <div id="choices-container">
-                     <div class="choice-row"><input type="text" name="choices[]" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button></div>
-                     <div class="choice-row"><input type="text" name="choices[]" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button></div>
+                     <div class="choice-row"><input type="text" name="choices" placeholder="Variant"><button class="choice-button" onclick="removeChoiceField(this)">-</button></div>
+                     <div class="choice-row"><input type="text" name="choices" placeholder="Variant"><button class="choice-button" onclick="removeChoiceField(this)">-</button></div>
                 </div>
-                <button type="button" onclick="addChoiceField()">+</button><br>
-                <button type="submit">Alusta voor</button>
+                <div class="choice-row"><span style="flex:1 1 auto"></span><button type="button" class="choice-button" onclick="addChoiceField()">+</button></div>
+                <button type="button" onclick="submitStartRoundForm()">Alusta vooru</button>
             </form>
+            <div id="start-round-message"></div>
         {% endif %}
         {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
     </div>

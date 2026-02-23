@@ -9,16 +9,24 @@
     <div class="main-content">
         {% if question %}
             <h2>Ennusta vooru võitjat</h2>
-            <form method="post" action="/predict" id="predict-form">
+            <form id="predict-form">
                 <p>{{ question }}</p>
                 {% for choice in choices %}
-                    <input type="radio" name="answer" value="{{ choice }}"> {{ choice }}<br>
+                    <input type="radio" name="answer" value="{{ choice }}" onchange="updatePredictButtonState()"> {{ choice }}<br>
                 {% endfor %}
                 <input type="text" name="name" placeholder="Sinu võistlejanimi"><br>
-                <button type="button" onclick="submitPredictForm()">Ennusta</button>
+                <button type="button" id="predict-button" onclick="submitPredictForm()" disabled>Ennusta</button>
             </form>
             <div id="predict-message"></div>
             <script>
+                function updatePredictButtonState() {
+                    const radios = document.querySelectorAll('input[name="answer"]');
+                    const btn = document.getElementById('predict-button');
+                    let selected = false;
+                    radios.forEach(r => { if (r.checked) selected = true; });
+                    btn.disabled = !selected;
+                }
+
             function submitPredictForm() {
                 const form = document.getElementById('predict-form');
                 const formData = new FormData(form);
@@ -34,7 +42,7 @@
                     } else if (data.error) {
                         msgDiv.innerHTML = `<span style='color:red'>${data.error}</span>`;
                     } else {
-                        msgDiv.innerHTML = '';
+                        msgDiv.innerHTML = '<span style="color:red">Tundmatu viga!</span>';
                     }
                 });
             }

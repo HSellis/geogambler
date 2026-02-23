@@ -44,13 +44,20 @@ button {
     width: 100%;
     box-sizing: border-box;
 }
-button[type="button"] {
-    background: #eee;
-    color: #222;
-    border: 1px solid #bbb;
-}
+
 button:hover {
     background: #1a6ed8;
+}
+
+button:disabled {
+    background: #b3d4fc;
+    color: #fff;
+    cursor: not-allowed;
+    opacity: 1;
+}
+button:disabled:hover {
+    background: #b3d4fc;
+    color: #fff;
 }
 
 .leaderboard-container {
@@ -128,6 +135,42 @@ footer .leaderboard {
 
 .main-content form {
     margin-bottom: 0.5em;
+}
+
+
+.choice-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    justify-content: flex-end;
+}
+
+.choice-row input[type="text"] {
+    flex: 1 1 auto;
+    margin: 0;
+    margin-right: 0.5em;
+    min-width: 0;
+}
+
+.choice-button {
+    width: 2em;
+    min-width: 2em;
+    max-width: 2em;
+    padding: 0.6em 0;
+    margin: 0;
+    border-radius: 4px;
+    background: #2d8cff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+.choice-button:hover {
+    background: #1a6ed8;
+}
+.choice-button:disabled {
+    background: #b3d4fc;
+    color: #fff;
+    cursor: not-allowed;
 }
 
 @media (max-width: 600px) {
