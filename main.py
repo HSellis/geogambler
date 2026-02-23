@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from typing import List
 import sqlite3
 import os
+import logging
 
 load_dotenv()
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin")
@@ -69,7 +70,6 @@ def get_db():
 def user_home(request: Request):
     conn = get_db()
     leaderboard = conn.execute("SELECT name, points FROM leaderboard ORDER BY points DESC").fetchall()
-    print(f"Leaderboard: {leaderboard}")
     round_info = conn.execute("SELECT * FROM rounds WHERE is_open=1").fetchone()
     choices = []
     question = None
@@ -87,8 +87,6 @@ def predict(name: str = Form(...), answer: str = Form(...)):
     already_predicted = conn.execute("SELECT * FROM predictions WHERE round_id=? AND name=?", (round_info["id"], name)).fetchone()
     if already_predicted:
         return JSONResponse(content={"error": "Selle nimega on juba ennustatud!"}, status_code=status.HTTP_409_CONFLICT)
-    # Lisa leaderboardi, kui pole
-    conn.execute("INSERT OR IGNORE INTO leaderboard (name, points) VALUES (?, 0)", (name,))
     conn.execute("INSERT INTO predictions (round_id, name, answer) VALUES (?, ?, ?)", (round_info["id"], name, answer))
     conn.commit()
     return JSONResponse(content={"success": "Ennustatud!"}, status_code=status.HTTP_200_OK)
@@ -117,12 +115,10 @@ def admin_dashboard(request: Request):
         choices = [c["choice"] for c in choices_db]
         round_info = dict(round_info)
         round_info["choices"] = choices
-    print(f"Round info: {round_info}")
     return templates.TemplateResponse("admin_dashboard.html", {"request": request, "leaderboard": leaderboard, "round_info": round_info})
 
 @app.post("/admin/start-round")
 def start_round(request: Request, question: str = Form(...), choices: List[str] = Form([])):
-    print(f"Starting round with question: {question} and choices: {choices}")
     if not request.session.get("admin"):
         return RedirectResponse("/admin", status_code=302)
     conn = get_db()
@@ -146,7 +142,7 @@ def end_round(request: Request, correct_answers: List[str] = Form([])):
         return templates.TemplateResponse("admin_dashboard.html", {"request": request, "error": "Avatud vooru pole!"})
     predictions = conn.execute("SELECT name, answer FROM predictions WHERE round_id=?", (round_info["id"],)).fetchall()
     for pred in predictions:
-        print(f"Checking prediction: {pred['name']} - {pred['answer']} against correct answers: {correct_answers}")
+        logging.debug(f"Checking prediction: {pred['name']} - {pred['answer']} against correct answers: {correct_answers}")
         if pred["answer"] in correct_answers:
             conn.execute("INSERT OR IGNORE INTO leaderboard (name, points) VALUES (?, 0)", (pred["name"],))
             conn.execute("UPDATE leaderboard SET points = points + 1 WHERE name=?", (pred["name"],))
