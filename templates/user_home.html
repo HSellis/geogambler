@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geogambler - Edetabel ja ennustus</title>
+</head>
+<body>
+    <h1>Edetabel</h1>
+    <ul>
+        {% for entry in leaderboard %}
+            <li>{{ entry.name }}: {{ entry.points }} punkti</li>
+        {% endfor %}
+    </ul>
+    {% if question %}
+        <h2>Ennusta vooru võitjat</h2>
+        <form method="post" action="/predict" id="predict-form">
+            <p>{{ question }}</p>
+            {% for choice in choices %}
+                <input type="radio" name="answer" value="{{ choice }}"> {{ choice }}<br>
+            {% endfor %}
+            <input type="text" name="name" placeholder="Sinu võistlejanimi"><br>
+            <button type="button" onclick="submitPredictForm()">Ennusta</button>
+        </form>
+        <div id="predict-message"></div>
+        <script>
+        function submitPredictForm() {
+            const form = document.getElementById('predict-form');
+            const formData = new FormData(form);
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const msgDiv = document.getElementById('predict-message');
+                if (data.success) {
+                    msgDiv.innerHTML = `<span style='color:green'>${data.success}</span>`;
+                } else if (data.error) {
+                    msgDiv.innerHTML = `<span style='color:red'>${data.error}</span>`;
+                } else {
+                    msgDiv.innerHTML = '';
+                }
+            });
+        }
+        </script>
+    {% else %}
+        <p>Hetkel pole avatud ennustusvooru.</p>
+    {% endif %}
+    {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+    {% if success %}<p style="color:green">{{ success }}</p>{% endif %}
+</body>
+</html>
