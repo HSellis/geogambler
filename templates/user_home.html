@@ -2,50 +2,63 @@
 <html>
 <head>
     <title>Geogambler - Edetabel ja ennustus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Edetabel</h1>
-    <ul>
-        {% for entry in leaderboard %}
-            <li>{{ entry.name }}: {{ entry.points }} punkti</li>
-        {% endfor %}
-    </ul>
-    {% if question %}
-        <h2>Ennusta vooru võitjat</h2>
-        <form method="post" action="/predict" id="predict-form">
-            <p>{{ question }}</p>
-            {% for choice in choices %}
-                <input type="radio" name="answer" value="{{ choice }}"> {{ choice }}<br>
-            {% endfor %}
-            <input type="text" name="name" placeholder="Sinu võistlejanimi"><br>
-            <button type="button" onclick="submitPredictForm()">Ennusta</button>
-        </form>
-        <div id="predict-message"></div>
-        <script>
-        function submitPredictForm() {
-            const form = document.getElementById('predict-form');
-            const formData = new FormData(form);
-            fetch('/predict', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                const msgDiv = document.getElementById('predict-message');
-                if (data.success) {
-                    msgDiv.innerHTML = `<span style='color:green'>${data.success}</span>`;
-                } else if (data.error) {
-                    msgDiv.innerHTML = `<span style='color:red'>${data.error}</span>`;
-                } else {
-                    msgDiv.innerHTML = '';
-                }
-            });
-        }
-        </script>
-    {% else %}
-        <p>Hetkel pole avatud ennustusvooru.</p>
-    {% endif %}
-    {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
-    {% if success %}<p style="color:green">{{ success }}</p>{% endif %}
+    <div class="main-content">
+        {% if question %}
+            <h2>Ennusta vooru võitjat</h2>
+            <form method="post" action="/predict" id="predict-form">
+                <p>{{ question }}</p>
+                {% for choice in choices %}
+                    <input type="radio" name="answer" value="{{ choice }}"> {{ choice }}<br>
+                {% endfor %}
+                <input type="text" name="name" placeholder="Sinu võistlejanimi"><br>
+                <button type="button" onclick="submitPredictForm()">Ennusta</button>
+            </form>
+            <div id="predict-message"></div>
+            <script>
+            function submitPredictForm() {
+                const form = document.getElementById('predict-form');
+                const formData = new FormData(form);
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const msgDiv = document.getElementById('predict-message');
+                    if (data.success) {
+                        msgDiv.innerHTML = `<span style='color:green'>${data.success}</span>`;
+                    } else if (data.error) {
+                        msgDiv.innerHTML = `<span style='color:red'>${data.error}</span>`;
+                    } else {
+                        msgDiv.innerHTML = '';
+                    }
+                });
+            }
+            </script>
+        {% else %}
+            <p>Hetkel pole avatud ennustusvooru.</p>
+        {% endif %}
+        {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+        {% if success %}<p style="color:green">{{ success }}</p>{% endif %}
+    </div>
+    <footer>
+        <div class="leaderboard-container">
+            <h2>Edetabel</h2>
+            <table class="leaderboard">
+                <thead>
+                    <tr><th>Nimi</th><th>Punktid</th></tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                        <tr><td>{{ entry.name }}</td><td>{{ entry.points }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </footer>
 </body>
 </html>

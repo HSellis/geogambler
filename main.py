@@ -120,8 +120,9 @@ def admin_dashboard(request: Request):
     print(f"Round info: {round_info}")
     return templates.TemplateResponse("admin_dashboard.html", {"request": request, "leaderboard": leaderboard, "round_info": round_info})
 
-@app.post("/admin/start_round")
+@app.post("/admin/start-round")
 def start_round(request: Request, question: str = Form(...), choices: List[str] = Form([])):
+    print(f"Starting round with question: {question} and choices: {choices}")
     if not request.session.get("admin"):
         return RedirectResponse("/admin", status_code=302)
     conn = get_db()
@@ -135,7 +136,7 @@ def start_round(request: Request, question: str = Form(...), choices: List[str] 
     conn.commit()
     return RedirectResponse("/admin/dashboard", status_code=302)
 
-@app.post("/admin/end_round")
+@app.post("/admin/end-round")
 def end_round(request: Request, correct_answers: List[str] = Form([])):
     if not request.session.get("admin"):
         return RedirectResponse("/admin", status_code=302)

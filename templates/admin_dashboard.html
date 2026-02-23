@@ -2,12 +2,14 @@
 <html>
 <head>
     <title>Admin Dashboard - Geogambler</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
     function addChoiceField() {
         const container = document.getElementById('choices-container');
         const div = document.createElement('div');
         div.className = 'choice-row';
-        div.innerHTML = `<input type="text" name="choices" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button>`;
+        div.innerHTML = `<input type="text" name="choices[]" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button>`;
         container.appendChild(div);
     }
     function removeChoiceField(btn) {
@@ -16,41 +18,51 @@
     </script>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    <h2>Edetabel</h2>
-    <ul>
-        {% for entry in leaderboard %}
-            <li>{{ entry.name }}: {{ entry.points }} punkti</li>
-        {% endfor %}
-    </ul>
-    {% if round_info %}
-        <h2>Lõpeta ennustusvoor</h2>
-        <form method="post" action="/admin/end_round">
-            <p>Küsimus: {{ round_info.question }}</p>
-            <label>Õiged vastused:</label><br>
-            {% if round_info.choices and round_info.choices|length > 0 %}
-                {% for choice in round_info.choices %}
-                    <input type="checkbox" name="correct_answers" value="{{ choice }}"> {{ choice }}<br>
-                {% endfor %}
-            {% else %}
-                <p>Valikvastuseid pole.</p>
-            {% endif %}
-            <button type="submit">Lõpeta voor</button>
-        </form>
-    {% else %}
-        <h2>Alusta uut ennustusvooru</h2>
-        <form method="post" action="/admin/start_round">
-            <label>Küsimus:</label><br>
-            <input type="text" name="question"><br>
-            <label>Vastusevariandid:</label><br>
-            <div id="choices-container">
-                 <div class="choice-row"><input type="text" name="choices" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button></div>
-                 <div class="choice-row"><input type="text" name="choices" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button></div>
-            </div>
-            <button type="button" onclick="addChoiceField()">+</button><br>
-            <button type="submit">Alusta voor</button>
-        </form>
-    {% endif %}
-    {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+    <div class="main-content">
+        {% if round_info %}
+            <h2>Lõpeta ennustusvoor</h2>
+            <form method="post" action="/admin/end-round">
+                <p>Küsimus: {{ round_info.question }}</p>
+                <label>Õiged vastused:</label><br>
+                {% if round_info.choices and round_info.choices|length > 0 %}
+                    {% for choice in round_info.choices %}
+                        <input type="checkbox" name="correct_answers" value="{{ choice }}"> {{ choice }}<br>
+                    {% endfor %}
+                {% else %}
+                    <p>Valikvastuseid pole.</p>
+                {% endif %}
+                <button type="submit">Lõpeta voor</button>
+            </form>
+        {% else %}
+            <h2>Alusta uut ennustusvooru</h2>
+            <form method="post" action="/admin/start-round">
+                <label>Küsimus:</label><br>
+                <input type="text" name="question"><br>
+                <label>Vastusevariandid:</label><br>
+                <div id="choices-container">
+                     <div class="choice-row"><input type="text" name="choices[]" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button></div>
+                     <div class="choice-row"><input type="text" name="choices[]" placeholder="Variant"> <button type="button" onclick="removeChoiceField(this)">-</button></div>
+                </div>
+                <button type="button" onclick="addChoiceField()">+</button><br>
+                <button type="submit">Alusta voor</button>
+            </form>
+        {% endif %}
+        {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+    </div>
+    <footer>
+        <div class="leaderboard-container">
+            <h2 class="admin-leaderboard-title">Edetabel</h2>
+            <table class="leaderboard">
+                <thead>
+                    <tr><th>Nimi</th><th>Punktid</th></tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                        <tr><td>{{ entry.name }}</td><td>{{ entry.points }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </footer>
 </body>
 </html>
