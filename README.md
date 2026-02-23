@@ -1,37 +1,27 @@
-# Geogambler turniir ennustussüsteem
+# Geoguessri turniiri ennustusrakendus
 
-See on FastAPI-põhine veebirakendus, mis võimaldab osalejatel ennustada Geoguessri turniiri voorude võitjaid ning adminil hallata ennustusvoore.
+Veebirakendus, mis võimaldab osalejatel ennustada Geoguessri turniiri voorude võitjaid ning adminil alustada ja lõpetada ennustusvoore.
 
 ## Käivitamine
-1. Paigalda vajalikud teegid:
+1. Installi vajalikud _library_'d:
    ```
    pip install -r requirements.txt
    ```
 
-2. Loo .env fail juurkausta:
-```
-ADMIN_PASSWORD=admin
-```
+2. Loo `.env` fail ja pane sinna admin parool:
+    ```
+    ADMIN_PASSWORD=...
+    ```
 
 3. Käivita rakendus:
-```
-uvicorn main:app --reload
-```
+    ```
+    uvicorn main:app --host 0.0.0.0 --port 8000
+    ```
 
 ## Funktsionaalsus
 - Osaleja saab:
   - vaadata edetabelit
   - ennustada avatud voorus
-- Admin saab:
+- Admin saab `/admin` lehel:
   - avada/lõpetada ennustusvoore
   - vaadata edetabelit
-
-## Andmebaas
-Rakendus kasutab SQLite andmebaasi. Skeem luuakse automaatselt, kui andmebaasi pole.
-
-## Vaated
-- / - kasutaja vaade
-- /admin - admin vaade (parooliga)
-
-## Mallid
-Mallid asuvad kaustas templates.
