@@ -3,18 +3,20 @@
 <head>
     <title>MITS Geogambler</title>
     <link rel="icon" type="image/png" href="/static/mits_geogambler.png">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <header class="page-header">
+        <img src="/static/mits_geogambler.png" alt="Logo" class="page-header-logo">
         <h1>MITS Geogambler</h1>
     </header>
-    <div style="max-width: 400px; margin: 2em auto; padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);">
-        <h2 style="margin-top: 0;">Admin sisselogimine</h2>
-        <form method="post" action="/admin">
-            <input type="password" name="password" placeholder="Parool">
+    <div class="login-container">
+        <h2>Admin sisselogimine</h2>
+        <form method="post" action="/admin" class="login-form">
+            <input type="password" name="password" placeholder="Parool" required>
             <button type="submit">Logi sisse</button>
         </form>
-        {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+        {% if error %}<p class="error-message">{{ error }}</p>{% endif %}
     </div>
 </body>
 </html>

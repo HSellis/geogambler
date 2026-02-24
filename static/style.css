@@ -7,9 +7,16 @@ body {
 
 .page-header {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 25%, #b465da 75%, #9d4edd 100%);
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 1em;
     box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.page-header-logo {
+    height: 2.5em;
+    margin-right: 0.5em;
 }
 
 .page-header h1 {
@@ -36,7 +43,8 @@ h2 {
     font-size: 1.2em;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
     width: 100%;
     box-sizing: border-box;
     padding: 0.5em;
@@ -218,9 +226,6 @@ footer .leaderboard {
     .leaderboard {
         font-size: 1em;
     }
-    input[type="text"] {
-        font-size: 1em;
-    }
     button {
         font-size: 1em;
     }
@@ -234,4 +239,36 @@ footer .leaderboard {
         width: 50%;
         font-size: 1em;
     }
+}
+
+.login-container {
+    max-width: 420px;
+    margin: 3em auto;
+    padding: 2em;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.login-container h2 {
+    margin-top: 0;
+    margin-bottom: 1.5em;
+    text-align: center;
+    color: #333;
+    font-size: 1.4em;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.error-message {
+    color: #dc3545;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 0.75em;
+    margin-top: 1em;
+    text-align: center;
 }
