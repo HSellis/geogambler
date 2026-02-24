@@ -1,6 +1,10 @@
-# Geoguessri turniiri ennustusrakendus
+# Geogambler: Geoguessri turniiri ennustusrakendus
 
 Veebirakendus, mis võimaldab osalejatel ennustada Geoguessri turniiri voorude võitjaid ning adminil alustada ja lõpetada ennustusvoore.
+
+| | |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/321aa9ce-1675-4bd3-ba5d-37e81268e728" height="600"/> | <img src="https://github.com/user-attachments/assets/3b62702c-ef02-4075-9af9-73159b1be530" height="300"/><br><br><img src="https://github.com/user-attachments/assets/30faedc9-3ab6-4d81-8234-8f10871cefd6" height="300"/> |
 
 ## Käivitamine
 1. Installi vajalikud _library_'d:
