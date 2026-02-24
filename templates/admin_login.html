@@ -5,11 +5,16 @@
     <link rel="icon" type="image/png" href="/static/mits_geogambler.png">
 </head>
 <body>
-    <h1>Admin sisselogimine</h1>
-    <form method="post" action="/admin">
-        <input type="password" name="password" placeholder="Parool">
-        <button type="submit">Logi sisse</button>
-    </form>
-    {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+    <header class="page-header">
+        <h1>MITS Geogambler</h1>
+    </header>
+    <div style="max-width: 400px; margin: 2em auto; padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);">
+        <h2 style="margin-top: 0;">Admin sisselogimine</h2>
+        <form method="post" action="/admin">
+            <input type="password" name="password" placeholder="Parool">
+            <button type="submit">Logi sisse</button>
+        </form>
+        {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+    </div>
 </body>
 </html>
