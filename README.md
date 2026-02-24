@@ -1,4 +1,4 @@
-# Geogambler: Geoguessri turniiri ennustusrakendus
+# Geogamblr: Geoguessri turniiri ennustusrakendus
 
 Veebirakendus, mis võimaldab osalejatel ennustada Geoguessri turniiri voorude võitjaid ning adminil alustada ja lõpetada ennustusvoore.
 

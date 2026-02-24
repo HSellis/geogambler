@@ -19,7 +19,7 @@ app.add_middleware(SessionMiddleware, secret_key="supersecret")
 # Static files (optional, for CSS/JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-DB_PATH = "geogambler.db"
+DB_PATH = "geogamblr.db"
 
 # Automaatne andmebaasi loomine
 def init_db():

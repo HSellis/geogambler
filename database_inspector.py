@@ -1,7 +1,7 @@
 import sqlite3
 
 def print_table_data(table_name):
-    con = sqlite3.connect('geogambler.db')
+    con = sqlite3.connect('geogamblr.db')
     cursor = con.cursor()
     cursor.execute(f"SELECT * FROM {table_name};")
     rows = cursor.fetchall()
@@ -9,7 +9,7 @@ def print_table_data(table_name):
         print(row)
     con.close()
 
-con = sqlite3.connect('geogambler.db')
+con = sqlite3.connect('geogamblr.db')
 cursor = con.cursor()
 tables = cursor.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
 for table in tables:
