@@ -4,42 +4,6 @@
     <title>Admin Dashboard - Geogambler</title>
     <link rel="stylesheet" href="/static/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script>
-    function addChoiceField() {
-        const container = document.getElementById('choices-container');
-        const div = document.createElement('div');
-        div.className = 'choice-row';
-        div.innerHTML = `<input type="text" name="choices" placeholder="Variant"> <button class="choice-button" onclick="removeChoiceField(this)">-</button>`;
-        container.appendChild(div);
-    }
-    function removeChoiceField(btn) {
-        btn.parentElement.remove();
-    }
-    function submitEndRoundForm() {
-        const form = document.getElementById('end-round-form');
-        const formData = new FormData(form);
-        fetch('/admin/end-round', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.body.innerHTML = html;
-        });
-    }
-    function submitStartRoundForm() {
-        const form = document.getElementById('start-round-form');
-        const formData = new FormData(form);
-        fetch('/admin/start-round', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.body.innerHTML = html;
-        });
-    }
-    </script>
 </head>
 <body>
     <div class="main-content">
@@ -75,7 +39,10 @@
         {% endif %}
         {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
     </div>
-    <footer>
+    <footer id="footer">
+        <div class="drag-handle" id="drag-handle">
+            <div class="drag-bar"></div>
+        </div>
         <div class="leaderboard-container">
             <h2>Edetabel</h2>
             <table class="leaderboard">
@@ -90,5 +57,89 @@
             </table>
         </div>
     </footer>
+    <script>
+        // Admin form functionality
+        function addChoiceField() {
+            const container = document.getElementById('choices-container');
+            const div = document.createElement('div');
+            div.className = 'choice-row';
+            div.innerHTML = `<input type="text" name="choices" placeholder="Variant"> <button class="choice-button" onclick="removeChoiceField(this)">-</button>`;
+            container.appendChild(div);
+        }
+
+        function removeChoiceField(btn) {
+            btn.parentElement.remove();
+        }
+
+        function submitEndRoundForm() {
+            const form = document.getElementById('end-round-form');
+            const formData = new FormData(form);
+            fetch('/admin/end-round', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            });
+        }
+
+        function submitStartRoundForm() {
+            const form = document.getElementById('start-round-form');
+            const formData = new FormData(form);
+            fetch('/admin/start-round', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            });
+        }
+
+        // Footer drag functionality
+        const footer = document.getElementById('footer');
+        const dragHandle = document.getElementById('drag-handle');
+        let isDragging = false;
+        let startY = 0;
+        let startHeight = 0;
+
+        dragHandle.addEventListener('mousedown', startDrag);
+        dragHandle.addEventListener('touchstart', startDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            startHeight = footer.offsetHeight;
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        }
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            const deltaY = startY - currentY;
+            const newHeight = startHeight + deltaY;
+            
+            // Limit height between 100px and 80% of viewport
+            const minHeight = 100;
+            const maxHeight = window.innerHeight * 0.8;
+            const clampedHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+            
+            footer.style.height = clampedHeight + 'px';
+        }
+
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function stopDrag() {
+            isDragging = false;
+            document.body.style.userSelect = '';
+        }
+    </script>
 </body>
 </html>

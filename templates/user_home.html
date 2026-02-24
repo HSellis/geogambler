@@ -18,42 +18,16 @@
                 <button type="button" id="predict-button" onclick="submitPredictForm()" disabled>Ennusta</button>
             </form>
             <div id="predict-message"></div>
-            <script>
-                function updatePredictButtonState() {
-                    const radios = document.querySelectorAll('input[name="answer"]');
-                    const btn = document.getElementById('predict-button');
-                    let selected = false;
-                    radios.forEach(r => { if (r.checked) selected = true; });
-                    btn.disabled = !selected;
-                }
-
-            function submitPredictForm() {
-                const form = document.getElementById('predict-form');
-                const formData = new FormData(form);
-                fetch('/predict', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const msgDiv = document.getElementById('predict-message');
-                    if (data.success) {
-                        msgDiv.innerHTML = `<span style='color:green'>${data.success}</span>`;
-                    } else if (data.error) {
-                        msgDiv.innerHTML = `<span style='color:red'>${data.error}</span>`;
-                    } else {
-                        msgDiv.innerHTML = '<span style="color:red">Tundmatu viga!</span>';
-                    }
-                });
-            }
-            </script>
         {% else %}
             <p>Hetkel pole avatud ennustusvooru.</p>
         {% endif %}
         {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
         {% if success %}<p style="color:green">{{ success }}</p>{% endif %}
     </div>
-    <footer>
+    <footer id="footer">
+        <div class="drag-handle" id="drag-handle">
+            <div class="drag-bar"></div>
+        </div>
         <div class="leaderboard-container">
             <h2>Edetabel</h2>
             <table class="leaderboard">
@@ -68,5 +42,79 @@
             </table>
         </div>
     </footer>
+    <script>
+        // Predict form functionality
+        function updatePredictButtonState() {
+            const radios = document.querySelectorAll('input[name="answer"]');
+            const btn = document.getElementById('predict-button');
+            let selected = false;
+            radios.forEach(r => { if (r.checked) selected = true; });
+            btn.disabled = !selected;
+        }
+
+        function submitPredictForm() {
+            const form = document.getElementById('predict-form');
+            const formData = new FormData(form);
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const msgDiv = document.getElementById('predict-message');
+                if (data.success) {
+                    msgDiv.innerHTML = `<span style='color:green'>${data.success}</span>`;
+                } else if (data.error) {
+                    msgDiv.innerHTML = `<span style='color:red'>${data.error}</span>`;
+                } else {
+                    msgDiv.innerHTML = '<span style="color:red">Tundmatu viga!</span>';
+                }
+            });
+        }
+
+        // Footer drag functionality
+        const footer = document.getElementById('footer');
+        const dragHandle = document.getElementById('drag-handle');
+        let isDragging = false;
+        let startY = 0;
+        let startHeight = 0;
+
+        dragHandle.addEventListener('mousedown', startDrag);
+        dragHandle.addEventListener('touchstart', startDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            startHeight = footer.offsetHeight;
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        }
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            const deltaY = startY - currentY;
+            const newHeight = startHeight + deltaY;
+            
+            // Limit height between 100px and 80% of viewport
+            const minHeight = 100;
+            const maxHeight = window.innerHeight * 0.8;
+            const clampedHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+            
+            footer.style.height = clampedHeight + 'px';
+        }
+
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function stopDrag() {
+            isDragging = false;
+            document.body.style.userSelect = '';
+        }
+    </script>
 </body>
 </html>
