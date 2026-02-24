@@ -2,9 +2,21 @@
 
 Veebirakendus, mis võimaldab osalejatel ennustada Geoguessri turniiri voorude võitjaid ning adminil alustada ja lõpetada ennustusvoore.
 
-| | |
-|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/321aa9ce-1675-4bd3-ba5d-37e81268e728" height="600"/> | <img src="https://github.com/user-attachments/assets/3b62702c-ef02-4075-9af9-73159b1be530" height="300"/><br><br><img src="https://github.com/user-attachments/assets/30faedc9-3ab6-4d81-8234-8f10871cefd6" height="300"/> |
+<table>
+  <tr>
+    <td rowspan="2">
+      <img src="https://github.com/user-attachments/assets/cfde961f-47b1-4063-ab6f-290ca1bf9f49" height="800"/>
+    </td>
+    <td>
+      <img alt="image" src="https://github.com/user-attachments/assets/e9d6457c-7aa2-424a-b777-35205fe14476" height="400"/>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img alt="image" src="https://github.com/user-attachments/assets/889b0632-4930-4da2-8180-889c57b4a83e" height="400"/>
+    </td>
+  </tr>
+</table>
 
 ## Käivitamine
 1. Installi vajalikud _library_'d:
